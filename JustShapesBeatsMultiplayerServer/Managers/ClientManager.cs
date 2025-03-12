@@ -215,7 +215,7 @@ namespace JustShapesBeatsMultiplayerServer.Managers
             SendToAllPlayersChangedPlayerDataPacket(setMemberDataPacket.RoomID, client);
         }
 
-        private void SendToAllPlayersChangedPlayerDataPacket(ushort roomID, Client client)
+        public void SendToAllPlayersChangedPlayerDataPacket(ushort roomID, Client client)
         {
             ChangedPlayerDataPacket changedPlayerDataPacket = new ChangedPlayerDataPacket(roomID, client.PlayerID);
 

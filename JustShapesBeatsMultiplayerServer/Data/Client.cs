@@ -155,8 +155,11 @@ namespace JustShapesBeatsMultiplayerServer.Data
         public void ClearRoom()
         {
             Room = null;
-            ValuesInRoom.Clear();
-            ValuesInRoom = null;
+            if (ValuesInRoom != null)
+            {
+                ValuesInRoom.Clear();
+                ValuesInRoom = null;
+            }
         }
     }
 }

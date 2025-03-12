@@ -97,6 +97,9 @@ namespace JustShapesBeatsMultiplayerServer.ClientProtocols
                     return;
                 }
 
+                if (_receiveBuffer == null)
+                    return;
+
                 ProcessingData(_receiveBuffer, bufferLength, 0);
 
                 _stream.BeginRead(_receiveBuffer, 0, Constants.TcpDataBufferSize, ReceiveCallback, null);
@@ -124,7 +127,7 @@ namespace JustShapesBeatsMultiplayerServer.ClientProtocols
 
             if (count >= packetLength)
             {
-                ReceviedPacket(input, index + 2);
+                ReceviedPacket(input, index + 2, packetLength);
 
                 if (count > packetLength)
                     ProcessingData(input, receivedBytes, index + packetLength + 2);
@@ -137,11 +140,11 @@ namespace JustShapesBeatsMultiplayerServer.ClientProtocols
 
                 Array.Copy(_receiveBuffer, index + 2, buffer, 0, count);
 
-                ReceviedPacket(buffer, 0);
+                ReceviedPacket(buffer, 0, packetLength);
             }
         }
 
-        private void ReceviedPacket(byte[] data, int index)
+        private void ReceviedPacket(byte[] data, int index, int length)
         {
             byte packetType = data[index];
 
@@ -153,7 +156,9 @@ namespace JustShapesBeatsMultiplayerServer.ClientProtocols
             }
             else if (packetType == PacketType.P2P)
             {
-                Program.ServerManagerInstance.GetClientManager().HandleP2PPacket(data, true);
+                byte[] packet = new byte[length];
+                Array.Copy(data, index, packet, 0, length);
+                Program.ServerManagerInstance.GetClientManager().HandleP2PPacket(packet, true);
             }
         }
 

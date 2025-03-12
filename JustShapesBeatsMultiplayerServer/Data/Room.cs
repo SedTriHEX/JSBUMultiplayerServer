@@ -48,6 +48,11 @@ namespace JustShapesBeatsMultiplayerServer.Data
             Players.Add(owner.PlayerID, owner);
         }
 
+        public void SetOwner(Client client)
+        {
+            Owner = client;
+        }
+
         public string GetValue(string key)
         {
             if (!Values.ContainsKey(key))

@@ -18,7 +18,7 @@
 
         public const byte RequestLobbyMemberByIndexRequest = 8;
 
-        // 9 SetLobbyOwner
+        public const byte SetLobbyOwner = 9;
 
         public const byte RequestMemberData = 10;
 
@@ -28,9 +28,9 @@
 
         public const byte JoinRoom = 13;
 
-        // 14 LeaveRoom
+        // TODO: 14 LeaveRoom
 
-        // 15 GetCommunityRoomList
+        // TODO: 15 GetCommunityRoomList
 
         public const byte ChangedPlayerData = 50;
 
@@ -38,9 +38,9 @@
 
         public const byte JoinedPlayer = 52;
 
-        //public const byte SendInvite = 53;
+        // TODO: public const byte SendInvite = 53;
 
-        //public const byte InviteOnRoom = 54;
+        // TODO: public const byte InviteOnRoom = 54;
 
         public const byte PingPong = 60;
     }

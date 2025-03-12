@@ -25,6 +25,7 @@ namespace JustShapesBeatsMultiplayerServer.Managers
             PacketHandler.AddPacketHandler(PacketEnum.RequestMemberData, RequestMemberData);
             PacketHandler.AddPacketHandler(PacketEnum.JoinRoom, JoinRoomRequest);
             PacketHandler.AddPacketHandler(PacketEnum.RequestLobbyData, RequestLobbyData);
+            PacketHandler.AddPacketHandler(PacketEnum.SetLobbyOwner, SetLobbyOwner);
         }
 
         public void SetClientManager(ref ClientManager clientManager)
@@ -255,6 +256,43 @@ namespace JustShapesBeatsMultiplayerServer.Managers
             RequestLobbyDataPacket resultRequestLobbyDataPacket = new RequestLobbyDataPacket(value);
 
             client.SendPacket(resultRequestLobbyDataPacket);
+        }
+
+        private void SetLobbyOwner(Packet packet, Client client)
+        {
+            SetLobbyOwnerPacket setLobbyOwnerPacket = new SetLobbyOwnerPacket(packet);
+
+            if (!Rooms.ContainsKey(setLobbyOwnerPacket.RoomID))
+            {
+                Debug.LogWarning("Invalid room. Reason=(Rooms.ContainsKey(setLobbyOwnerPacket.RoomID) == false)");
+                return;
+            }
+
+            if (!_clientManager.Clients.ContainsKey(setLobbyOwnerPacket.PlayerID))
+            {
+                Debug.LogWarning("Invalid player. Reason=(_clientManager.Clients.ContainsKey(setLobbyOwnerPacket.PlayerID) == false)");
+                return;
+            }
+
+            Client clientOwner = _clientManager.Clients[setLobbyOwnerPacket.PlayerID];
+
+            if (!client.InRoom || client.Room.ID != setLobbyOwnerPacket.RoomID)
+            {
+                Debug.LogWarning("Invalid current client room. RoomManager:SetLobbyOwner");
+                return;
+            }
+
+            if (!clientOwner.InRoom || clientOwner.Room.ID != setLobbyOwnerPacket.RoomID)
+            {
+                Debug.LogWarning("Invalid new owner client room. RoomManager:SetLobbyOwner");
+                return;
+            }
+
+            Room room = Rooms[setLobbyOwnerPacket.RoomID];
+
+            room.SetOwner(clientOwner);
+
+            _clientManager.SendToAllPlayersChangedPlayerDataPacket(room.ID, clientOwner);
         }
 #endregion PACKETS
 
