@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -246,7 +245,6 @@ namespace JustShapesBeatsMultiplayerServer.Managers
 
         private void PongClient(Packet packet, Client client)
         {
-            Debug.Log("pong client");
             client.UpdatePongDateTime(DateTime.Now);
 
             PingPongPacket pingPongPacket = new PingPongPacket(packet);

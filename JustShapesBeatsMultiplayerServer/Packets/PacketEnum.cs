@@ -28,7 +28,7 @@
 
         public const byte JoinRoom = 13;
 
-        // TODO: 14 LeaveRoom
+        public const byte LeaveRoom = 14;
 
         // TODO: 15 GetCommunityRoomList
 

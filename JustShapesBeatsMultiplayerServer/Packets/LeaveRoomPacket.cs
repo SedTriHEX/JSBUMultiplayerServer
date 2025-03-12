@@ -1,17 +1,14 @@
 ﻿namespace JustShapesBeatsMultiplayerServer.Packets
 {
-    class SetLobbyOwnerPacket : IPacket
+    class LeaveRoomPacket : IPacket
     {
         public ushort RoomID { private set; get; }
 
-        public ushort PlayerID { private set; get; }
-
         public Packet Packet { private set; get; }
 
-        public SetLobbyOwnerPacket(Packet packet)
+        public LeaveRoomPacket(Packet packet)
         {
             RoomID = packet.GetUshort();
-            PlayerID = packet.GetUshort();
         }
     }
 }

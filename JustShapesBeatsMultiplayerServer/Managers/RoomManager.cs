@@ -26,6 +26,7 @@ namespace JustShapesBeatsMultiplayerServer.Managers
             PacketHandler.AddPacketHandler(PacketEnum.JoinRoom, JoinRoomRequest);
             PacketHandler.AddPacketHandler(PacketEnum.RequestLobbyData, RequestLobbyData);
             PacketHandler.AddPacketHandler(PacketEnum.SetLobbyOwner, SetLobbyOwner);
+            PacketHandler.AddPacketHandler(PacketEnum.LeaveRoom, LeaveRoomRequest);
         }
 
         public void SetClientManager(ref ClientManager clientManager)
@@ -293,6 +294,21 @@ namespace JustShapesBeatsMultiplayerServer.Managers
             room.SetOwner(clientOwner);
 
             _clientManager.SendToAllPlayersChangedPlayerDataPacket(room.ID, clientOwner);
+        }
+
+        private void LeaveRoomRequest(Packet packet, Client client)
+        {
+            LeaveRoomPacket leaveRoomPacket = new LeaveRoomPacket(packet);
+
+            if (!Rooms.ContainsKey(leaveRoomPacket.RoomID))
+            {
+                Debug.LogWarning("Invalid room. Reason=(Rooms.ContainsKey(leaveRoomPacket.RoomID) == false)");
+                return;
+            }
+
+            Room room = Rooms[leaveRoomPacket.RoomID];
+
+            room.LeavePlayer(client);
         }
 #endregion PACKETS
 
