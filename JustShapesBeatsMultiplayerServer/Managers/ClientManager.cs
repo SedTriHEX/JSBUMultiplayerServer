@@ -66,12 +66,12 @@ namespace JustShapesBeatsMultiplayerServer.Managers
             if (Clients.Count > Constants.MaxPlayers)
                 return InvalidPlayerID;
 
-            _nextPlayerID++;
-            while (Clients.ContainsKey(_nextPlayerID))
+            do
             {
                 _nextPlayerID++;
-                if (_nextPlayerID == InvalidPlayerID) _nextPlayerID++;
-            }
+            } 
+            while (Clients.ContainsKey(_nextPlayerID) || _nextPlayerID == InvalidPlayerID);
+
             return _nextPlayerID;
         }
 
@@ -355,7 +355,7 @@ namespace JustShapesBeatsMultiplayerServer.Managers
                 }
             }
 
-            // rooms
+            // TODO: CheckPlayersAndRooms
         }
     }
 }

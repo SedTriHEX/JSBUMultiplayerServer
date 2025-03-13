@@ -10,6 +10,7 @@ namespace JustShapesBeatsMultiplayerServer.ClientProtocols
     class ClientTcpProtocol
     {
         public TcpClient TcpClient { private set; get; }
+
         public Client Client { private set; get; }
 
         private NetworkStream _stream;
@@ -156,9 +157,9 @@ namespace JustShapesBeatsMultiplayerServer.ClientProtocols
             }
             else if (packetType == PacketType.P2P)
             {
-                byte[] packet = new byte[length];
-                Array.Copy(data, index, packet, 0, length);
-                Program.ServerManagerInstance.GetClientManager().HandleP2PPacket(packet, true);
+                byte[] bufferPacket = new byte[length];
+                Array.Copy(data, index, bufferPacket, 0, length);
+                Program.ServerManagerInstance.GetClientManager().HandleP2PPacket(bufferPacket, true);
             }
         }
 

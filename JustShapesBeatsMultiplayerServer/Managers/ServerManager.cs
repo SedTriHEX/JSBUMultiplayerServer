@@ -28,8 +28,8 @@ namespace JustShapesBeatsMultiplayerServer.Managers
 
             _roomManager = new RoomManager();
             _clientManager = new ClientManager();
-            _tcpController = new TcpController(Constants.GamePort, ref _clientManager);
-            _udpController = new UdpController(Constants.GamePort, ref _clientManager);
+            _tcpController = new TcpController(Constants.GamePort, _clientManager);
+            _udpController = new UdpController(Constants.GamePort, _clientManager);
 
             _roomManager.SetClientManager(ref _clientManager);
             _clientManager.SetRoomManager(ref _roomManager);

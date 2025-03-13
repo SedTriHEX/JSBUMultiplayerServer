@@ -15,7 +15,7 @@ namespace JustShapesBeatsMultiplayerServer.Controllers
         private ushort _port;
         private ClientManager _clientManager;
 
-        public TcpController(ushort port, ref ClientManager clientManager)
+        public TcpController(ushort port, ClientManager clientManager)
         {
             _port = port;
             _clientManager = clientManager;
@@ -23,6 +23,9 @@ namespace JustShapesBeatsMultiplayerServer.Controllers
 
         public void Start()
         {
+            if(IsListening)
+                throw new InvalidOperationException("Server is already listening.");
+
             Listener = new TcpListener(IPAddress.Any, _port);
             Listener.Start();
             Listener.BeginAcceptTcpClient(ConnectCallback, null);

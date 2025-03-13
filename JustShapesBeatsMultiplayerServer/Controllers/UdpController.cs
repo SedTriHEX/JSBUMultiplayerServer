@@ -15,7 +15,7 @@ namespace JustShapesBeatsMultiplayerServer.Controllers
         private ushort _port;
         private ClientManager _clientManager;
 
-        public UdpController(ushort port, ref ClientManager clientManager)
+        public UdpController(ushort port, ClientManager clientManager)
         {
             _port = port;
             _clientManager = clientManager;

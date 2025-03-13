@@ -9,7 +9,7 @@ namespace JustShapesBeatsMultiplayerServer
     {
         public byte PacketId { private set; get; }
 
-        private List<byte> _bytes;
+        private List<byte> _writterBuffer;
         private byte[] _readableBuffer;
         private int _pos;
 
@@ -17,7 +17,7 @@ namespace JustShapesBeatsMultiplayerServer
         {
             PacketId = id;
 
-            _bytes = new List<byte>
+            _writterBuffer = new List<byte>
             {
                 PacketType.Default
             };
@@ -33,26 +33,27 @@ namespace JustShapesBeatsMultiplayerServer
             PacketId = _readableBuffer[_pos++];
         }
 
-        public byte[] ToBytes() => _bytes.ToArray();
+        public byte[] ToBytes() => _writterBuffer.ToArray();
 
-        public void Add(bool value) => _bytes.AddRange(BitConverter.GetBytes(value));
+        public void Add(bool value) => _writterBuffer.AddRange(BitConverter.GetBytes(value));
 
-        public void Add(byte value) => _bytes.Add(value);
-        public void Add(int value) => _bytes.AddRange(BitConverter.GetBytes(value));
+        public void Add(byte value) => _writterBuffer.Add(value);
 
-        public void Add(float value) => _bytes.AddRange(BitConverter.GetBytes(value));
+        public void Add(int value) => _writterBuffer.AddRange(BitConverter.GetBytes(value));
 
-        public void Add(ushort value) => _bytes.AddRange(BitConverter.GetBytes(value));
+        public void Add(float value) => _writterBuffer.AddRange(BitConverter.GetBytes(value));
 
-        public void Add(ulong value) => _bytes.AddRange(BitConverter.GetBytes(value));
+        public void Add(ushort value) => _writterBuffer.AddRange(BitConverter.GetBytes(value));
 
-        public void Add(long value) => _bytes.AddRange(BitConverter.GetBytes(value));
+        public void Add(ulong value) => _writterBuffer.AddRange(BitConverter.GetBytes(value));
+
+        public void Add(long value) => _writterBuffer.AddRange(BitConverter.GetBytes(value));
 
         public void Add(string value)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(value);
             Add((ushort)bytes.Length);
-            _bytes.AddRange(bytes);
+            _writterBuffer.AddRange(bytes);
         }
 
         public int GetInt()
@@ -79,7 +80,7 @@ namespace JustShapesBeatsMultiplayerServer
         {
             if (_readableBuffer != null)
                 return _readableBuffer.Length >= _pos + count;
-            return _bytes.Count >= _pos + count;
+            return _writterBuffer.Count >= _pos + count;
         }
 
         public byte GetByte()
