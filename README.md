@@ -38,7 +38,6 @@
      - Установите пакет `curl` и `unzip`, затем скачайте и распакуйте архив (в третьей команде замените `{VERSION}` на последнюю версию):
 
        ```bash
-       pkg install curl
        pkg install unzip
        curl -L -o JSBUMultiplayerServer_dotnet31.zip https://github.com/SedTriHEX/JSBUMultiplayerServer/releases/download/{VERSION}/JSBUMultiplayerServer_dotnet31.zip
        mkdir ~/jsbuserver
