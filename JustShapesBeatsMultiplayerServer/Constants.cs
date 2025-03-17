@@ -2,7 +2,9 @@
 {
     class Constants
     {
-        public const string GameVersion = "1.6.30u8";
+        public const string ServerVersion = "0.1.1 pre-build";
+
+        public const string GameVersion = "1.6.30u8.1";
 
         public const ushort GameSupportBuild = 25;
 

@@ -59,6 +59,8 @@ namespace JustShapesBeatsMultiplayerServer.Managers
 
             Debug.Log($"New connection! IP = {client.GetPlayerIP()} PlayerID = {client.PlayerID}");
             Debug.Log($"Current count clients: {Clients.Count}");
+
+            ConsoleHelper.UpdateTitle(Clients.Count, _roomManager.Rooms.Count);
         }
 
         public ushort GetFreePlayerID()
@@ -156,6 +158,7 @@ namespace JustShapesBeatsMultiplayerServer.Managers
                 Clients.Remove(client.PlayerID);
                 Debug.Log($"Disconnected client. PlayerID={client.PlayerID} IP={client.GetPlayerIP()}");
                 Debug.Log($"Current count clients: {Clients.Count}");
+                ConsoleHelper.UpdateTitle(Clients.Count, _roomManager.Rooms.Count);
 
                 if (client.InRoom)
                 {

@@ -42,6 +42,7 @@ namespace JustShapesBeatsMultiplayerServer.Managers
                 return;
             }
             Rooms.Remove(room.ID);
+            ConsoleHelper.UpdateTitle(_clientManager.Clients.Count, Rooms.Count);
         }
 
         #region PACKETS
@@ -319,6 +320,7 @@ namespace JustShapesBeatsMultiplayerServer.Managers
             owner.SetRoom(room);
 
             Rooms.Add(roomID, room);
+            ConsoleHelper.UpdateTitle(_clientManager.Clients.Count, Rooms.Count);
             return room;
         }
 

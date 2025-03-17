@@ -44,6 +44,8 @@ namespace JustShapesBeatsMultiplayerServer.Managers
 
             _clientManager.StartPingClients();
             _clientManager.StartCheckPlayersAndRooms();
+
+            ConsoleHelper.UpdateTitle(_clientManager.Clients.Count, _roomManager.Rooms.Count);
         }
 
         public void Stop()
