@@ -1,4 +1,5 @@
 # JSB Ultimate Multiplayer Server
+🌐 Language: 🇺🇸 English | [🇷🇺 Russian](https://github.com/CallMeSoumya2063/JSBUMultiplayerServer)
 
 This is a project to launch a server for JSB Ultimate (JSB Port) for multiplayer gameplay.
 
