@@ -4,6 +4,8 @@ using JustShapesBeatsMultiplayerServer.Packets;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace JustShapesBeatsMultiplayerServer.ClientProtocols
 {
@@ -72,7 +74,7 @@ namespace JustShapesBeatsMultiplayerServer.ClientProtocols
                 _stream = TcpClient.GetStream();
 
                 _receiveBuffer = new byte[Constants.TcpDataBufferSize];
-                _stream.BeginRead(_receiveBuffer, 0, Constants.TcpDataBufferSize, ReceiveCallback, null);
+                Task.Run(BeginReceive);
             }
             catch (Exception ex)
             {
@@ -81,67 +83,53 @@ namespace JustShapesBeatsMultiplayerServer.ClientProtocols
             }
         }
 
-        private void ReceiveCallback(IAsyncResult result)
+        private async void BeginReceive()
         {
-            try
+            while (_stream != null && TcpClient.Connected)
             {
-                if (_stream == null || !_stream.CanRead || !_stream.CanWrite || !TcpClient.Connected)
-                {
-                    //Debug.Log($"Invalid receive tcp data. (_stream == null || !_stream.CanRead || !_stream.CanWrite || !TcpClient.Connected) == true");
-                    return;
-                }
+                (bool successReadPacketSizeBuffer, byte[] packetSizeBuffer) = await TryReadBytesAsync(sizeof(ushort));
 
-                int bufferLength = _stream.EndRead(result);
-                if (bufferLength <= 0)
+                if (!successReadPacketSizeBuffer)
                 {
                     Client.Disconnect();
-                    return;
+                    break; 
                 }
 
-                if (_receiveBuffer == null)
-                    return;
+                ushort length = BitConverter.ToUInt16(packetSizeBuffer);
 
-                ProcessingData(_receiveBuffer, bufferLength, 0);
+                (bool successReadBuffer, byte[] buffer) = await TryReadBytesAsync(length);
 
-                _stream.BeginRead(_receiveBuffer, 0, Constants.TcpDataBufferSize, ReceiveCallback, null);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Invalid receive tcp data. {ex}");
-                Client.Disconnect();
+                if (!successReadBuffer)
+                {
+                    Client.Disconnect();
+                    break;
+                }
+
+                ReceviedPacket(buffer, 0, length);
             }
         }
 
-        private void ProcessingData(byte[] input, int receivedBytes, int index)
+        private async ValueTask<(bool, byte[])> TryReadBytesAsync(int count)
         {
-            if (receivedBytes - index == 1)
+            try
             {
-                byte[] buffer = new byte[2] { input[index], 0 };
-                _stream.Read(buffer, 1, 1);
+                byte[] buffer = new byte[count];
+                int totalReaded = 0;
+                while (totalReaded < count)
+                {
+                    int readed = await _stream.ReadAsync(buffer, totalReaded, count - totalReaded);
 
-                ProcessingData(buffer, 2, 0);
-                return;
+                    if (readed == 0)
+                        return (false, new byte[0]);
+
+                    totalReaded += readed;
+                }
+                return (true, buffer);
             }
-
-            ushort packetLength = BitConverter.ToUInt16(input, index);
-            int count = receivedBytes - index - 2;
-
-            if (count >= packetLength)
+            catch (Exception ex)
             {
-                ReceviedPacket(input, index + 2, packetLength);
-
-                if (count > packetLength)
-                    ProcessingData(input, receivedBytes, index + packetLength + 2);
-            }
-            else
-            {
-                byte[] buffer = new byte[packetLength];
-
-                _stream.Read(buffer, count, packetLength - count);
-
-                Array.Copy(_receiveBuffer, index + 2, buffer, 0, count);
-
-                ReceviedPacket(buffer, 0, packetLength);
+                Debug.LogError($"Failed read bytes from NetworkBuffer. {ex}");
+                return (false, new byte[0]);
             }
         }
 

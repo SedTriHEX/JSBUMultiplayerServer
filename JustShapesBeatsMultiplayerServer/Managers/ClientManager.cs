@@ -352,10 +352,10 @@ namespace JustShapesBeatsMultiplayerServer.Managers
                     DisconnectClient(client);
                     return;
                 }
-                if (client.InRoom)
-                {
-                    Room room = client.Room;
-                }
+                //if (client.InRoom)
+                //{
+                //    Room room = client.Room;
+                //}
             }
 
             // TODO: CheckPlayersAndRooms
